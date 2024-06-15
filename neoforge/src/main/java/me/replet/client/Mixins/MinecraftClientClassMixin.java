@@ -7,6 +7,7 @@ import net.minecraft.MinecraftVersion;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.ReportType;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -105,10 +106,10 @@ public abstract class MinecraftClientClassMixin extends ReentrantThreadExecutor<
         SimpleDateFormat var10003 = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
         Date var10004 = new Date();
         File file2 = new File(file, "crash-" + var10003.format(var10004) + "-client.txt");
-        Bootstrap.println(report.asString());
+        Bootstrap.println(report.asString(ReportType.MINECRAFT_CRASH_REPORT));
         if (report.getFile() != null) {
             Bootstrap.println("#@!@# Game crashed! Crash report saved to: #@!@# " + report.getFile());
-        } else if (report.writeToFile(file2)) {
+        } else if (report.writeToFile(file2.toPath(),ReportType.MINECRAFT_CRASH_REPORT)) {
             Bootstrap.println("#@!@# Game crashed! Crash report saved to: #@!@# " + file2.getAbsolutePath());
         } else {
             Bootstrap.println("#@?@# Game crashed! Crash report could not be saved. #@?@#");

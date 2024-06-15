@@ -12,7 +12,6 @@
     "PhantomSpawnerMixin",
     "PlayerInventoryMixin",
     "SugarcaneBlockMixin",
-    "step.ServerPlayerEntityMixin"
   ],
   "client": [
     "client.MinecraftClientMixin",

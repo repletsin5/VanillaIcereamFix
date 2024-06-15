@@ -19,9 +19,9 @@ public class ModConfig implements ConfigData {
 	@ConfigEntry.Gui.TransitiveObject
 	public ClientOnly clientOnly = new ClientOnly();
 
-	@ConfigEntry.Category("antiCheat")
-	@ConfigEntry.Gui.TransitiveObject
-	public AntiCheat antiCheat = new AntiCheat();
+//	@ConfigEntry.Category("antiCheat")
+//	@ConfigEntry.Gui.TransitiveObject
+//	public AntiCheat antiCheat = new AntiCheat();
 
 	public static class General {
 		@ConfigEntry.Gui.NoTooltip
@@ -94,13 +94,13 @@ public class ModConfig implements ConfigData {
 		public boolean useAnvilMod = false;
 	}
 
-	public static class AntiCheat {
-		@ConfigEntry.Gui.NoTooltip
-		@Comment("Prevents players from stepping up one block (stepping does not reduce hunger)")
-		public boolean fixStepHeight = true;
+//	public static class AntiCheat {
+//		@ConfigEntry.Gui.NoTooltip
+//		@Comment("Prevents players from stepping up one block (stepping does not reduce hunger)")
+//		public boolean fixStepHeight = true;
 
 //		@ConfigEntry.Gui.NoTooltip
 //		@Comment("Prevents players from being invulnerable during or after a teleport to a new dimension")
 //		public boolean noPlayerInvulnerabilityAfterTeleport = true;
-	}
+//	}
 }

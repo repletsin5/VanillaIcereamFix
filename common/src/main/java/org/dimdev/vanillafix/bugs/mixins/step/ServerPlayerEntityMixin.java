@@ -33,7 +33,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 	 */
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void afterInit(MinecraftServer server, ServerWorld world, GameProfile profile, SyncedClientOptions clientOptions, CallbackInfo ci) {
-		this.setStepHeight(0.7F);
+		//this.setStepHeight(0.7F);
 	}
 
 }

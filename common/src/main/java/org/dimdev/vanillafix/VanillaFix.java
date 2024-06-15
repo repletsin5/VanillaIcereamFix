@@ -40,7 +40,7 @@ public class VanillaFix {
 
                             @Override
                             public ConfigPair getValue() {
-                                return ConfigPair.CODEC.parse(JanksonOps.INSTANCE, entry.getValue()).getOrThrow(false, System.err::println);
+                                return ConfigPair.CODEC.parse(JanksonOps.INSTANCE, entry.getValue()).getOrThrow();
                             }
 
                             @Override
