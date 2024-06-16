@@ -1,0 +1,22 @@
+{
+  "modListVersion": 2,
+  "modList": [
+    {
+      "modid": "vanillafix",
+      "name": "VanillaIcecreamFix",
+      "description": "Bug fixes, optimizations, no more crashes, and better crash reports for Minecraft",
+      "version": "${version}",
+      "mcversion": "${mcversion}",
+      "url": "https://curseforge.com/minecraft/mc-mods/vanillaicecreamfix",
+      "authorList": [
+        "Runemoro",
+        "ZombieHDGaming",
+        "replet"
+      ],
+      "logoFile": "/assets/vanillafix/logo.png",
+      "parent": "",
+      "screenshots": [],
+      "dependencies": []
+    }
+  ]
+}

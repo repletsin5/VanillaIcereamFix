@@ -1,0 +1,199 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.minecraftforge.net' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repo.spongepowered.org/repository/maven-public" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.1"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.+'
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.github.johnrengelman.shadow"
+
+configurations {
+    compileJar {
+        implementation.extendsFrom(compileJar)
+    }
+}
+
+repositories {
+    maven {
+        url "https://repo.spongepowered.org/repository/maven-public/"
+    }
+    maven {
+        url "https://maven.covers1624.net"
+    }
+    maven {
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        url 'https://www.cursemaven.com'
+    }
+    ivy {
+        url "https://media.forgecdn.net/files/"
+
+        patternLayout {
+            artifact "[organisation]/[module]/[revision].[ext]"
+        }
+
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+minecraft {
+    mappings channel: 'stable', version: '39-1.12'
+
+    accessTransformer = file("src/main/resources/META-INF/vanillafix_at.cfg")
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            property 'fml.coreMods.load', 'org.dimdev.vanillafix.VanillaFixLoadingPlugin'
+            property 'mixin.hotSwap', 'true'
+            property 'mixin.checks.interfaces', 'true'
+            property 'mixin.debug.export', 'true'
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            property 'fml.coreMods.load', 'org.dimdev.vanillafix.VanillaFixLoadingPlugin'
+            property 'mixin.hotSwap', 'true'
+            property 'mixin.checks.interfaces', 'true'
+            property 'mixin.debug.export', 'true'
+        }
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileJar ("org.spongepowered:mixin:0.8.5") {
+        exclude module: "asm-commons"
+        exclude module: "asm-tree"
+        exclude module: "launchwrapper"
+        exclude module: "guava"
+        exclude module: "log4j-core"
+        exclude module: "gson"
+        exclude module: "commons-io"
+    }
+    compileOnly fg.deobf("2535:884:Chisel-MC1.12.2-0.2.0.31@jar")
+    compileOnly fg.deobf("2530:225:OpenBlocks-1.12.2-1.7.6@jar")
+    compileOnly fg.deobf("2525:230:OpenModsLib-1.12.2-0.11.5@jar")
+    compileOnly fg.deobf("2568:0:TConstruct-1.12.2-2.10.1.84@jar")
+    compileOnly fg.deobf("2568:0:TConstruct-1.12.2-2.10.1.84@jar")
+    compileOnly fg.deobf("2511:625:Avaritia-1.12-3.2.0.13-universal@jar")
+    compileOnly fg.deobf("codechicken:CodeChickenLib:1.12.2-3.1.9.344:deobf")
+    compileOnly fg.deobf("2482:584:CustomMainMenu-MC1.12.2-2.0.8@jar")
+    compileOnly fg.deobf("team.chisel.ctm:CTM:MC1.12-0.2.3.12")
+    compileOnly fg.deobf("curse.maven:lolasm-460609:4800875")
+
+}
+
+version "1.0.3"
+group "org.dimdev.vanillafix"
+archivesBaseName = "VanillaIcecreamFix"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mixin {
+    add sourceSets.main, "mixins.vanillafix.refmap.json"
+}
+
+java {
+    withSourcesJar()
+}
+
+processResources {
+    filesMatching("mcmod.info") {
+        expand "version": project.version, "mcversion": "1.12.2"
+    }
+
+    // Re-run this task when these change
+    inputs.property "version", project.version
+    inputs.property "mcversion", "1.12.2"
+}
+
+jar {
+    classifier "nolibs"
+    manifest {
+        attributes([
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "FMLCorePlugin": "org.dimdev.vanillafix.VanillaFixLoadingPlugin",
+            "ForceLoadAsMod": "true",
+            "FMLAT": "vanillafix_at.cfg",
+            "FMLCorePluginContainsFMLMod": "true",
+            "Specification-Title": "vanillafix",
+            "Specification-Vendor": "Dimensional Development",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"Dimensional Development",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.vanillafix.refmap.json"
+    }
+}
+shadowJar {
+    archiveClassifier.set(null)
+    configurations = [project.configurations.compileJar]
+}
+
+task thinShadowJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveClassifier.set("thin")
+    configurations = [project.configurations.compileJar]
+    relocators = shadowJar.relocators
+
+    dependencies {
+        exclude(dependency("org.spongepowered:mixin"))
+    }
+
+    manifest {
+        inheritFrom jar.manifest
+    }
+
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives jar
+    archives shadowJar
+    archives sourcesJar
+    archives thinShadowJar
+}
+
+reobf {
+    shadowJar {}
+    thinShadowJar {}
+}
