@@ -21,8 +21,4 @@ public class WorldRendererMixin implements WorldRendererExtensions {
 //		//this.frustum = frustum2;
 //	}
 
-	@Override
-	public Frustum getFrustum() {
-		return this.frustum;
-	}
 }

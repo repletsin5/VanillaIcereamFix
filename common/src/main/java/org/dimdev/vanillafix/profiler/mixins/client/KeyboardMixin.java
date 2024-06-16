@@ -16,7 +16,7 @@ public class KeyboardMixin {
 	 * @reason Add the F3 + S help message to the F3 + Q debug help menu.
 	 */
 	@Inject(method = "processF3", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;addMessage(Lnet/minecraft/text/Text;)V", ordinal = 9), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void addF3SHelpMessage(int key, CallbackInfoReturnable<Boolean> cir, ChatHud chatGui) {
+	private void addF3SHelpMessage(int key, CallbackInfoReturnable<Boolean> cir, int var2, boolean bl2, ChatHud chatHud) {
 		// TODO
 //        chatGui.addMessage(new TranslatableText("vanillafix.debug.switch_profiler.help"));
 	}
