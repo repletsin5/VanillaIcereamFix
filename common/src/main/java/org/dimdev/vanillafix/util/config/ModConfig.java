@@ -30,9 +30,6 @@ public class ModConfig implements ConfigData {
 	}
 
 	public static class BugFixes {
-		@ConfigEntry.Gui.NoTooltip
-		@Comment("Disables loading the spawn chunks when the server starts. This drastically reduces world loading times. As a side effect, invisible chunks may appear for the first few seconds when creating a new world")
-		public boolean disableInitialChunkLoad = true;
 
 	//	@ConfigEntry.Gui.NoTooltip
 	//	@Comment("Compare items by item type rather than NBT when looking for items for the crafting recipe")

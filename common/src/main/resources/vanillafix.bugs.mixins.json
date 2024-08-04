@@ -8,10 +8,9 @@
   "mixins": [
     "CreateBiomeAccessor",
     "ItemStackMixin",
-    "MinecraftServerMixin",
     "PhantomSpawnerMixin",
     "PlayerInventoryMixin",
-    "SugarcaneBlockMixin",
+    "SugarcaneBlockMixin"
   ],
   "client": [
     "client.MinecraftClientMixin",
