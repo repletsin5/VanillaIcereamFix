@@ -27,3 +27,5 @@ build
 run
 .DS_Store
 Thumbs.db
+lib/liteloader-1.12.2-SNAPSHOT.jar
+.travis.yml

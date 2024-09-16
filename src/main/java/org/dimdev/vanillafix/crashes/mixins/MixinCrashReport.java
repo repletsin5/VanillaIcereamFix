@@ -2,16 +2,15 @@ package org.dimdev.vanillafix.crashes.mixins;
 
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.common.ModContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.dimdev.utils.ModIdentifier;
 import org.dimdev.vanillafix.crashes.IPatchedCrashReport;
+import org.dimdev.vanillafix.crashes.Liteloaderhelper;
 import org.dimdev.vanillafix.crashes.StacktraceDeobfuscator;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,10 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Mixin(value = CrashReport.class, priority = 500)
 public abstract class MixinCrashReport implements IPatchedCrashReport {
@@ -34,9 +30,15 @@ public abstract class MixinCrashReport implements IPatchedCrashReport {
     @Shadow private static String getWittyComment() { return null; }
 
     private Set<ModContainer> suspectedMods;
+    private List<String> suspectedModsLL = new ArrayList<>();
+    private boolean hasLiteloader = false;
 
     @Override public Set<ModContainer> getSuspectedMods() {
         return suspectedMods;
+    }
+    @Override
+    public List<String> getSuspectedModsLL() {
+        return suspectedModsLL;
     }
 
     /** @reason Adds a list of mods which may have caused the crash to the report. */
@@ -54,6 +56,25 @@ public abstract class MixinCrashReport implements IPatchedCrashReport {
 
                 if (!modNames.isEmpty()) {
                     modListString = StringUtils.join(modNames, ", ");
+                }else {
+
+                    try {
+                        if (Launch.classLoader.findClass("com.mumfrey.liteloader.core.LiteLoader") != null) {
+                            hasLiteloader = true;
+                            Liteloaderhelper.getLLmods().forEach(m -> {
+                                modNames.add(m+ " (Liteloader Mod)");
+                                suspectedModsLL.add(m + " (Liteloader Mod)");
+                            });
+
+                            if (!modNames.isEmpty()) {
+                                modListString = StringUtils.join(modNames, ", ");
+
+                            }
+
+                        }
+                    }catch (ClassNotFoundException ignored){
+
+                    }
                 }
                 return modListString;
             } catch (Throwable e) {
@@ -114,6 +135,8 @@ public abstract class MixinCrashReport implements IPatchedCrashReport {
                 ModContainer mod = suspectedMods.iterator().next();
                 String author = mod.getMetadata().authorList.get(0);
                 return "I blame " + author + ".";
+            }else if(hasLiteloader){
+                return "Hmm could be a Liteloader mod.";
             }
         } catch (Throwable ignored) {}
 

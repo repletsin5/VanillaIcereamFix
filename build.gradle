@@ -109,10 +109,11 @@ dependencies {
     compileOnly fg.deobf("2482:584:CustomMainMenu-MC1.12.2-2.0.8@jar")
     compileOnly fg.deobf("team.chisel.ctm:CTM:MC1.12-0.2.3.12")
     compileOnly fg.deobf("curse.maven:lolasm-460609:4800875")
+    compileOnly fg.deobf(files("lib/liteloader-1.12.2-SNAPSHOT.jar"))
 
 }
 
-version "1.0.3"
+version "1.0.4"
 group "org.dimdev.vanillafix"
 archivesBaseName = "VanillaIcecreamFix"
 

@@ -70,6 +70,7 @@ public abstract class GuiProblemScreen extends GuiScreen {
     protected String getModListString() {
         if (modListString == null) {
             final Set<ModContainer> suspectedMods = ((IPatchedCrashReport) report).getSuspectedMods();
+            final List<String> suspectedModsLL = ((IPatchedCrashReport) report).getSuspectedModsLL();
             if (suspectedMods == null) {
                 return modListString = I18n.format("vanillafix.crashscreen.identificationErrored");
             }
@@ -77,6 +78,7 @@ public abstract class GuiProblemScreen extends GuiScreen {
             for (ModContainer mod : suspectedMods) {
                 modNames.add(mod.getName());
             }
+            modNames.addAll(suspectedModsLL);
             if (modNames.isEmpty()) {
                 modListString = I18n.format("vanillafix.crashscreen.unknownCause");
             } else {
